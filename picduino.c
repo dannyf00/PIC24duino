@@ -234,6 +234,20 @@ inline int digitalRead(PIN_TypeDef pin) {
 //end GPIO
 
 //Arduino Functions: Time
+//return timer ticks
+uint32_t ticks(void) {
+	uint32_t m;					//stores overflow count
+	uint16_t f;					//return the fractions / TMR1 value
+	
+	//use double reads
+	do {
+		m = timer_ticks;
+		f = TMR1;
+	} while (m != timer_ticks);
+	//now m and f are consistent
+	return (m | f);
+}
+	
 //return microseconds
 uint32_t micros(void) {
 	uint32_t m;					//stores overflow count
@@ -245,7 +259,7 @@ uint32_t micros(void) {
 		f = TMR1;
 	} while (m != timer_ticks);
 	//now m and f are consistent
-	return (m | f) / clockCyclesPerMicrosecond() / 1;
+	return (m | f) / clockCyclesPerMicrosecond();
 }
 	
 //return milliseconds
@@ -260,35 +274,21 @@ uint32_t millis(void) {
 		f = TMR1;
 	} while (m != timer_ticks);
 		
-	return (m | f) / clockCyclesPerMicrosecond() / 1000;	//or shift 10 positions
-}
-
-//return timer ticks
-uint32_t ticks(void) {
-	uint32_t m;
-	uint16_t f;
-	
-	//use double reads
-	do {
-		m = timer_ticks;
-		f = TMR1;
-	} while (m != timer_ticks);
-		
-	return (m | f); 							//return ticks
+	return (m | f) / cyclesPerMillisecond();	//or shift 10 positions
 }
 
 //delay millisseconds
 void delay(uint32_t ms) {
-	uint32_t start_time = millis();
-
-	while (millis() - start_time < ms) continue;
+	uint32_t start_time = ticks();
+	ms *= cyclesPerMillisecond();
+	while (ticks() - start_time < ms) continue;
 }
 
 //delay micros seconds
 void delayMicroseconds(uint32_t us) {
-	uint32_t start_time = micros();
-	
-	while (micros() - start_time < us) continue;
+	uint32_t start_time = ticks();
+	us *= cyclesPerMicrosecond();
+	while (ticks() - start_time < us) continue;
 }
 //end Time
 

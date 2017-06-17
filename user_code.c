@@ -12,8 +12,6 @@ void setup(void) {
 }
 
 void loop(void) {
-
 	digitalWrite(LED1, !digitalRead(LED1));	//flip led1 - for debugging
 	delay(100);
-	
 }

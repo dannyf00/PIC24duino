@@ -335,10 +335,13 @@ void digitalWrite(PIN_TypeDef pin, uint8_t mode);
 int digitalRead(PIN_TypeDef pin);
 
 //time base
+uint32_t ticks(void);
 uint32_t millis(void);
 uint32_t micros(void);
 void delay(uint32_t ms);
 void delayMicroseconds(uint32_t us);
+#define cyclesPerMicrosecond()			(F_CPU / 1000)
+#define cyclesPerMillisecond()			(F_CPU / 1000000ul)
 
 //advanced IO
 void tone(void);									//tone frequency specified by F_TONE in STM8Sduino.h
