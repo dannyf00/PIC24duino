@@ -1,6 +1,9 @@
 //PICduino GPIO functions for PIC24-family chips
 //compiler: XC16 (developed and tested under v1.11)
 //
+//version: 0.14b@7/5/2017
+//fixed a bug on cyclesPerMillisecond() and cyclesPerMicrosecond() - they are reversely in the original code
+//
 //version: 0.14a@ 6/5/2017
 //i2c1/2 implemented
 //added ticks() to return raw timer ticks
@@ -146,7 +149,7 @@ typedef enum {
 } CNWPU_TypeDef;
 	
 #ifndef F_CPU										//allows user specified F_CPU in the IDE
-#define F_CPU				(8000000ul/2)			//cpu runs at 8Mhz/2 -> F_xtal = 8Mhz (internal RC)
+#define F_CPU				(16000000ul/2)			//cpu runs at 8Mhz/2 -> F_xtal = 8Mhz (internal RC)
 #endif
 #define SystemCoreClock		F_CPU
 
@@ -340,8 +343,8 @@ uint32_t millis(void);
 uint32_t micros(void);
 void delay(uint32_t ms);
 void delayMicroseconds(uint32_t us);
-#define cyclesPerMicrosecond()			(F_CPU / 1000)
-#define cyclesPerMillisecond()			(F_CPU / 1000000ul)
+#define cyclesPerMicrosecond()			(F_CPU / 1000000ul)
+#define cyclesPerMillisecond()			(F_CPU / 1000ul)
 
 //advanced IO
 void tone(void);									//tone frequency specified by F_TONE in STM8Sduino.h

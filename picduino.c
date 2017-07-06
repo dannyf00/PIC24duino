@@ -11,34 +11,35 @@ static void empty_handler(void) {
 //global variables
 
 
-#if defined(INT02RP)
+//#if defined(INT02RP)
 static void (* _isrptr_INT0)(void)=empty_handler;				//isrptr for INT0, pointing to empty_handler by default
 //INT0 isr
 void _ISR _INT0Interrupt(void) {
 	_INT0IF = 0;						//clear the flag
 	_isrptr_INT0();						//run the isr
 }
-#endif
+//#endif
 
-#if defined(INT12RP)
+//#if defined(INT12RP)
 static void (* _isrptr_INT1)(void)=empty_handler;				//isrptr for INT0, pointing to empty_handler by default
 //INT1 isr
 void _ISR _INT1Interrupt(void) {
 	_INT1IF = 0;						//clear the flag
 	_isrptr_INT1();						//run the isr
 }
-#endif
+//#endif
 
-#if defined(INT22RP)
+//#if defined(INT22RP)
 static void (* _isrptr_INT2)(void)=empty_handler;				//isrptr for INT0, pointing to empty_handler by default
 //INT2 isr
 void _ISR _INT2Interrupt(void) {
 	_INT2IF = 0;						//clear the flag
 	_isrptr_INT2();						//run the isr
 }
-#endif
+//#endif
 
-#if defined(_INT3Interrupt) && defined(INT32RP)
+#if defined(_INT3Interrupt)
+// && defined(INT32RP)
 static void (* _isrptr_INT3)(void)=empty_handler;				//isrptr for INT0, pointing to empty_handler by default
 //INT3 isr - not always there
 void _ISR _INT3Interrupt(void) {
@@ -343,31 +344,32 @@ uint32_t pulseIn(PIN_TypeDef pin, uint8_t state) {
 //mode 0: falling edge, 1: rising edge
 void attachInterrupt(uint8_t intx, void (*isrptr) (void), uint8_t mode) {
 	switch (intx) {
-#if defined(INT02RP)
+//#if defined(INT02RP)
 		case 0:									//for int0
 			_isrptr_INT0 = isrptr;				//install user handler
 			_INT0IF = 0;						//clear int0 flag
 			_INT0EP = (mode==RISING)?0:1;		//0=triggered on the rising edge. 1 = falling edge
 			_INT0IE = 1;						//enable int0 interrupt
 			break;
-#endif											//int0
-#if defined(INT12RP)
+//#endif											//int0
+//#if defined(INT12RP)
 		case 1:									//for int1
 			_isrptr_INT1 = isrptr;				//install user handler
 			_INT1IF = 0;						//clear int1 flag
 			_INT1EP = (mode==RISING)?0:1;		//0=triggered on the rising edge. 1 = falling edge
 			_INT1IE = 1;						//enable int1 interrupt
 			break;
-#endif											//int1
-#if defined(INT22RP)
+//#endif											//int1
+//#if defined(INT22RP)
 		case 2:									//for int2
 			_isrptr_INT2 = isrptr;				//install user handler
 			_INT2IF = 0;						//clear int2 flag
 			_INT2EP = (mode==RISING)?0:1;		//0=triggered on the rising edge. 1 = falling edge
 			_INT2IE = 1;						//enable int2 interrupt
 			break;
-#endif											//int2
-#if defined(_INT3Interrupt) &&  defined(INT32RP)	//int3 not present on all chips
+//#endif											//int2
+#if defined(_INT3Interrupt)
+// &&  defined(INT32RP)	//int3 not present on all chips
 		case 3:									//for int3
 			_isrptr_INT3 = isrptr;				//install user handler
 			_INT3IF = 0;						//clear int3 flag
